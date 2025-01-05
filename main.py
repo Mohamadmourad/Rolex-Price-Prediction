@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
@@ -102,3 +103,26 @@ onnx_model = convert_sklearn(model, initial_types=initial_type)
 
 with open("knn_model.onnx", "wb") as f:
     f.write(onnx_model.SerializeToString())
+
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, color='blue', alpha=0.6)
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='red', linestyle='--', label="Perfect Prediction (y=x)")
+plt.title("Predicted vs Actual Prices", fontsize=16)
+plt.xlabel("Actual Prices", fontsize=12)
+plt.ylabel("Predicted Prices", fontsize=12)
+plt.legend()
+plt.grid(color='gray', linestyle='--', linewidth=0.5)
+plt.tight_layout()
+plt.show()
+
+x = np.arange(len(y_test))
+plt.figure(figsize=(10, 6))
+plt.plot(x, y_test.values, label="Actual Prices", color="blue", linewidth=2)
+plt.plot(x, y_pred, label="Predicted Prices", color="orange", linestyle="--", linewidth=2)
+plt.title("Actual vs Predicted Prices", fontsize=16)
+plt.xlabel("Index", fontsize=12)
+plt.ylabel("Price", fontsize=12)
+plt.legend()
+plt.grid(color='gray', linestyle='--', linewidth=0.5)
+plt.tight_layout()
+plt.show()
