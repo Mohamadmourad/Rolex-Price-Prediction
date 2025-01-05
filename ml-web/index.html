@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Price Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+        }
+    </style>
+      <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-300 text-gray-800">
+    <div class="max-w-4xl mx-auto p-6">
+        <header class="text-center py-8">
+            <h1 class="text-5xl font-bold text-gray-900 tracking-wide">Watch Price Predictor</h1>
+            <p class="text-xl text-gray-600 mt-4">Refined luxury at your fingertips.</p>
+        </header>
+
+        <main class="bg-white shadow-xl rounded-lg p-8 border border-gray-200">
+            <form id="predict-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="form-group">
+                        <label for="model" class="block text-lg font-medium text-gray-700">Model</label>
+                        <select id="model" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                            <option value="Sky-Dweller">Sky-Dweller</option>
+                            <option value="Datejust 41">Datejust 41</option>
+                            <option value="GMT-Master II">GMT-Master II</option>
+                            <option value="Sea-Dweller Deepsea">Sea-Dweller Deepsea</option>
+                            <option value="Submariner">Submariner</option>
+                            <option value="Submariner Date">Submariner Date</option>
+                            <option value="Oyster Perpetual 39">Oyster Perpetual 39</option>
+                            <option value="Day-Date 36">Day-Date 36</option>
+                            <option value="Yacht-Master 40">Yacht-Master 40</option>
+                            <option value="Oyster Perpetual 41">Oyster Perpetual 41</option>
+                            <option value="Daytona">Daytona</option>
+                            <option value="Datejust 36">Datejust 36</option>
+                            <option value="Milgauss">Milgauss</option>
+                            <option value="Day-Date 40">Day-Date 40</option>
+                            <option value="Lady-Datejust">Lady-Datejust</option>
+                            <option value="Sea-Dweller">Sea-Dweller</option>
+                            <option value="Explorer II">Explorer II</option>
+                            <option value="Yacht-Master 37">Yacht-Master 37</option>
+                            <option value="Oyster Perpetual 36">Oyster Perpetual 36</option>
+                            <option value="Sea-Dweller 4000">Sea-Dweller 4000</option>
+                            <option value="Air King">Air King</option>
+                            <option value="Datejust 31">Datejust 31</option>
+                            <option value="Day-Date II">Day-Date II</option>
+                            <option value="Oyster Perpetual 34">Oyster Perpetual 34</option>
+                            <option value="Yacht-Master 42">Yacht-Master 42</option>
+                            <option value="Explorer">Explorer</option>
+                            <option value="Datejust II">Datejust II</option>
+                            <option value="GMT-Master">GMT-Master</option>
+                            <option value="Oyster Perpetual">Oyster Perpetual</option>
+                            <option value="Datejust Turn-O-Graph">Datejust Turn-O-Graph</option>
+                            <option value="Yacht-Master II">Yacht-Master II</option>
+                            <option value="Oyster Perpetual Date">Oyster Perpetual Date</option>
+                            <option value="Datejust">Datejust</option>
+                            <option value="Oyster Perpetual 31">Oyster Perpetual 31</option>
+                            <option value="Oysterdate Precision">Oysterdate Precision</option>
+                            <option value="Cellini Moonphase">Cellini Moonphase</option>
+                            <option value="Yacht-Master">Yacht-Master</option>
+                            <option value="Cellini">Cellini</option>
+                            <option value="Datejust Oysterquartz">Datejust Oysterquartz</option>
+                            <option value="Oyster Perpetual Lady Date">Oyster Perpetual Lady Date</option>
+                            <option value="Day-Date">Day-Date</option>
+                            <option value="Chronograph">Chronograph</option>
+                            <option value="Cellini Prince">Cellini Prince</option>
+                            <option value="Precision">Precision</option>
+                            <option value="Lady-Datejust Pearlmaster">Lady-Datejust Pearlmaster</option>
+                            <option value="Oyster Precision">Oyster Precision</option>
+                            <option value="Oyster Perpetual 28">Oyster Perpetual 28</option>
+                            <option value="Oyster Perpetual 26">Oyster Perpetual 26</option>
+                            <option value="Cellini Dual Time">Cellini Dual Time</option>
+                            <option value="Pearlmaster">Pearlmaster</option>
+                            <option value="Cellini Date">Cellini Date</option>
+                            <option value="Cellini Danaos">Cellini Danaos</option>
+                            <option value="Cellini Time">Cellini Time</option>
+                            <option value="Manual winding">Manual winding</option>
+                            <option value="Day-Date Oysterquartz">Day-Date Oysterquartz</option>
+                            <option value="Oyster">Oyster</option>
+                            <option value="Turn-O-Graph">Turn-O-Graph</option>
+                            <option value="Trench">Trench</option>
+                            <option value="Prince">Prince</option>
+                            <option value="ES34297">ES34297</option>
+                            <option value="Air King Date">Air King Date</option>
+                            <option value="P68288CRD">P68288CRD</option>
+                            <option value="P68288CFD">P68288CFD</option>
+                            <option value="P68289SXD">P68289SXD</option>
+                            <option value="Steel">Steel</option>
+                            <option value="Rolex 1265">Rolex 1265</option>
+                            <option value="Automatic">Automatic</option>
+                            <option value="P68279BI">P68279BI</option>
+                            <option value="SHOCK RESISTING -10CT ROSE GOLD - HONEYCOMB DIAL – VINTAGE 1956">SHOCK RESISTING -10CT ROSE GOLD - HONEYCOMB DIAL – VINTAGE 1956</option>
+                            <option value="C0423EXXX169">C0423EXXX169</option>
+                            <option value="1946 Rolex Oyster 36mm Ovettone aka Big Bubbleback - FULL SET - Ref. 5028">1946 Rolex Oyster 36mm Ovettone aka Big Bubbleback - FULL SET - Ref. 5028</option>
+                            <option value="Rolex Vintage Ladies Cocktail Watch White Dial No Papers">Rolex Vintage Ladies Cocktail Watch White Dial No Papers</option>
+                            <option value="P68279WDD">P68279WDD</option>
+                            <option value="Rolex wall clock">Rolex wall clock</option>
+                            <option value="1934 Rolex Curvex 18K Solid gold - Original Box - Ref. 869">1934 Rolex Curvex 18K Solid gold - Original Box - Ref. 869</option>
+                            <option value="Rolex 9164">Rolex 9164</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="case-material" class="block text-lg font-medium text-gray-700">Case Material</label>
+                        <select id="case-material" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                        <option value="Rose gold">Rose gold</option>
+                        <option value="Steel">Steel</option>
+                        <option value="Automatic">Automatic</option>
+                        <option value="White gold">White gold</option>
+                        <option value="Gold/Steel">Gold/Steel</option>
+                        <option value="Yellow gold">Yellow gold</option>
+                        <option value="Platinum">Platinum</option>
+                        <option value="Titanium">Titanium</option>
+                        <option value="Unknown">Unknown</option>
+                        <option value="Gold-plated">Gold-plated</option>
+                        <option value="Red gold">Red gold</option>
+                        <option value="Ceramic">Ceramic</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Calf skin">Calf skin</option>
+                        <option value="Manual winding">Manual winding</option>
+                        <option value="Leather">Leather</option>
+                        <option value="Quartz">Quartz</option>
+                        <option value="Bronze">Bronze</option>
+                        <option value="Rubber">Rubber</option>
+                        <option value="Lizard skin">Lizard skin</option>
+                        <option value="Carbon">Carbon</option>
+                        <option value="Crocodile skin">Crocodile skin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bracelet-material" class="block text-lg font-medium text-gray-700">Bracelet Material</label>
+                        <select id="bracelet-material" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                            <option value="Rubber">Rubber</option>
+                        <option value="Steel">Steel</option>
+                        <option value="Gold/Steel">Gold/Steel</option>
+                        <option value="Yellow gold">Yellow gold</option>
+                        <option value="White gold">White gold</option>
+                        <option value="Rose gold">Rose gold</option>
+                        <option value="Platinum">Platinum</option>
+                        <option value="Leather">Leather</option>
+                        <option value="Titanium">Titanium</option>
+                        <option value="Crocodile skin">Crocodile skin</option>
+                        <option value="Unknown">Unknown</option>
+                        <option value="Silver">Silver</option>
+                        <option value="Snake skin">Snake skin</option>
+                        <option value="Original box, original papers">Original box, original papers</option>
+                        <option value="Ceramic">Ceramic</option>
+                        <option value="Alligator skin">Alligator skin</option>
+                        <option value="No original box, no original papers">No original box, no original papers</option>
+                        <option value="Textile">Textile</option>
+                        <option value="United States of America, New York, New York">United States of America, New York, New York</option>
+                        <option value="Calf skin">Calf skin</option>
+                        <option value="Mens watch/Unisex">Mens watch/Unisex</option>
+                        <option value="Red gold">Red gold</option>
+                        <option value="Original papers, no original box">Original papers, no original box</option>
+                        <option value="United States of America, Florida, Palm Beach">United States of America, Florida, Palm Beach</option>
+                        <option value="United States of America, Virginia, Vienna">United States of America, Virginia, Vienna</option>
+                        <option value="Silicon">Silicon</option>
+                        <option value="Shark skin">Shark skin</option>
+                        <option value="Lizard skin">Lizard skin</option>
+                        <option value="Plastic">Plastic</option>
+                        <option value="Aluminium">Aluminium</option>
+                        <option value="Ostrich skin">Ostrich skin</option>
+                        <option value="United States of America, Texas, Houston">United States of America, Texas, Houston</option>
+                        <option value="United States of America, New York, Huntington Village">United States of America, New York, Huntington Village</option>
+                        <option value="United States of America, Florida, Pompano Beach">United States of America, Florida, Pompano Beach</option>
+                        <option value="Original box, no original papers">Original box, no original papers</option>
+                        <option value="United States of America, Nevada, Henderson">United States of America, Nevada, Henderson</option>
+                        <option value="Germany, Wetter an der Ruhr">Germany, Wetter an der Ruhr</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="year" class="block text-lg font-medium text-gray-700">Year of Production</label>
+                        <input type="number" id="year" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender" class="block text-lg font-medium text-gray-700">Gender</label>
+                        <select id="gender" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                            <option value="Mens watch/Unisex">Mens watch/Unisex</option>
+                            <option value="Womens watch">Womens watch</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jewels" class="block text-lg font-medium text-gray-700">Number of Jewels</label>
+                        <input type="number" id="jewels" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clasp-material" class="block text-lg font-medium text-gray-700">Clasp Material</label>
+                        <select id="clasp-material" required class="mt-2 block w-full rounded-lg border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500">
+                            <option value="Sapphire crystal">Sapphire crystal</option>
+                            <option value="Steel">Steel</option>
+                            <option value="Ceramic">Ceramic</option>
+                            <option value="White gold">White gold</option>
+                            <option value="Rose gold">Rose gold</option>
+                            <option value="Yellow gold">Yellow gold</option>
+                            <option value="Platinum">Platinum</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Meteorite">Meteorite</option>
+                            <option value="Aluminum">Aluminum</option>
+                            <option value="Black">Black</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Gold/Steel">Gold/Steel</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Green">Green</option>
+                            <option value="Not water resistant">Not water resistant</option>
+                            <option value="Grey">Grey</option>
+                            <option value="Mother of pearl">Mother of pearl</option>
+                            <option value="Plexiglass">Plexiglass</option>
+                            <option value="Titanium">Titanium</option>
+                            <option value="Champagne">Champagne</option>
+                            <option value="Gold">Gold</option>
+                            <option value="No numerals">No numerals</option>
+                            <option value="White">White</option>
+                            <option value="Roman numerals">Roman numerals</option>
+                            <option value="Gem-set">Gem-set</option>
+                            <option value="Plastic">Plastic</option>
+                            <option value="Arabic numerals">Arabic numerals</option>
+                            <option value="Pink">Pink</option>
+                            <option value="Gemstones">Gemstones</option>
+                            <option value="Yellow">Yellow</option>
+                            <option value="Lines">Lines</option>
+                            <option value="Red">Red</option>
+                            <option value="Mineral Glass">Mineral Glass</option>
+                            <option value="Silver (solid)">Silver (solid)</option>
+                            <option value="Orange">Orange</option>
+                            <option value="Purple">Purple</option>
+                            <option value="Red gold">Red gold</option>
+                            <option value="Turquoise">Turquoise</option>
+                            <option value="Brass">Brass</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white py-3 px-6 rounded-lg shadow-md text-lg font-semibold hover:from-yellow-600 hover:to-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">Predict Price</button>
+            </form>
+
+            <div id="output" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-200">
+                <h2 class="text-xl font-medium">Predicted Price: <span id="price" class="text-yellow-600 font-bold">--</span></h2>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
