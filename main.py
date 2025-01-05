@@ -34,20 +34,36 @@ df["Clasp Material"] = df["Clasp Material"].fillna(mostFrequentClaspMaterial)
 
 df.drop_duplicates(inplace=True)
 
-label_encoder = LabelEncoder()
-df['Model'] = label_encoder.fit_transform(df['Model'])
-df['Case Material'] = label_encoder.fit_transform(df['Case Material'])
-df['Bracelet Material'] = label_encoder.fit_transform(df['Bracelet Material'])
-df['Gender'] = label_encoder.fit_transform(df['Gender'])
-df['Clasp Material'] = label_encoder.fit_transform(df['Clasp Material'])
-
 def convert_mapping(mapping):
     """Convert all keys and values in the mapping to standard Python types."""
     return {str(k): int(v) for k, v in mapping.items()}
 
+model_encoder = LabelEncoder()
+df["Model"] = model_encoder.fit_transform(df["Model"])
+model_mapping = convert_mapping(dict(zip(model_encoder.classes_, model_encoder.transform(model_encoder.classes_))))
+
+case_encoder = LabelEncoder()
+df["Case Material"] = case_encoder.fit_transform(df["Case Material"])
+case_mapping = convert_mapping(dict(zip(case_encoder.classes_, case_encoder.transform(case_encoder.classes_))))
+
+bracelet_encoder = LabelEncoder()
+df["Bracelet Material"] = bracelet_encoder.fit_transform(df["Bracelet Material"])
+bracelet_mapping = convert_mapping(dict(zip(bracelet_encoder.classes_, bracelet_encoder.transform(bracelet_encoder.classes_))))
+
+gender_encoder = LabelEncoder()
+df["Gender"] = gender_encoder.fit_transform(df["Gender"])
+gender_mapping = convert_mapping(dict(zip(gender_encoder.classes_, gender_encoder.transform(gender_encoder.classes_))))
+
+clasp_encoder = LabelEncoder()
+df["Clasp Material"] = clasp_encoder.fit_transform(df["Clasp Material"])
+clasp_mapping = convert_mapping(dict(zip(clasp_encoder.classes_, clasp_encoder.transform(clasp_encoder.classes_))))
+
 mappings = {
-    column: convert_mapping(dict(zip(encoder.classes_, encoder.transform(encoder.classes_))))
-    for column, encoder in label_encoder.items()
+    "Model": model_mapping,
+    "Case Material": case_mapping,
+    "Bracelet Material": bracelet_mapping,
+    "Gender": gender_mapping,
+    "Clasp Material": clasp_mapping
 }
 
 with open("mappings.json", "w") as f:
