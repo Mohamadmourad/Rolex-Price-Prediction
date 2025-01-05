@@ -1,7 +1,6 @@
 let session;
 let mappings = {};
 
-// Load the ONNX model
 async function loadModel() {
   try {
     session = await ort.InferenceSession.create("knn_model.onnx");
@@ -11,7 +10,6 @@ async function loadModel() {
   }
 }
 
-// Load the mappings.json file
 async function loadMappings() {
   try {
     const response = await fetch("mappings.json");
@@ -27,13 +25,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadModel();
 });
 
-// Event listener for form submission
 document
   .getElementById("predict-form")
   .addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    // Extract form inputs and map to encoded values
     const inputs = {
       model: mappings["Model"][document.getElementById("model").value] ?? 0,
       caseMaterial:
@@ -55,7 +51,6 @@ document
 
     console.log("Inputs:", inputs);
 
-    // Transform input into a numeric array
     const featureVector = Float32Array.from([
       inputs.model,
       inputs.caseMaterial,
@@ -67,16 +62,13 @@ document
     ]);
     console.log("Feature Vector:", featureVector);
 
-    // Create an ONNX tensor
     const inputTensor = new ort.Tensor("float32", featureVector, [1, 7]);
 
-    // Check if the model is loaded
     if (!session) {
       console.error("Model not loaded yet.");
       return;
     }
 
-    // Run the model
     try {
       const feeds = { float_input: inputTensor };
       console.log("Feeds:", feeds);
@@ -86,7 +78,6 @@ document
       const prediction = results[outputName].data[0];
       console.log("Prediction:", prediction);
 
-      // Display the predicted price
       document.getElementById("price").innerText = `$${prediction.toFixed(2)}`;
     } catch (err) {
       console.error("Error during model inference:", err);
