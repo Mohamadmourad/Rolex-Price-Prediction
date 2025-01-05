@@ -34,16 +34,12 @@ df["Clasp Material"] = df["Clasp Material"].fillna(mostFrequentClaspMaterial)
 
 df.drop_duplicates(inplace=True)
 
-label_encoders = {
-    "Model": LabelEncoder(),
-    "Case Material": LabelEncoder(),
-    "Bracelet Material": LabelEncoder(),
-    "Gender": LabelEncoder(),
-    "Clasp Material": LabelEncoder()
-}
-
-for column, encoder in label_encoders.items():
-    df[column] = encoder.fit_transform(df[column])
+label_encoder = LabelEncoder()
+df['Model'] = label_encoder.fit_transform(df['Model'])
+df['Case Material'] = label_encoder.fit_transform(df['Case Material'])
+df['Bracelet Material'] = label_encoder.fit_transform(df['Bracelet Material'])
+df['Gender'] = label_encoder.fit_transform(df['Gender'])
+df['Clasp Material'] = label_encoder.fit_transform(df['Clasp Material'])
 
 def convert_mapping(mapping):
     """Convert all keys and values in the mapping to standard Python types."""
@@ -51,7 +47,7 @@ def convert_mapping(mapping):
 
 mappings = {
     column: convert_mapping(dict(zip(encoder.classes_, encoder.transform(encoder.classes_))))
-    for column, encoder in label_encoders.items()
+    for column, encoder in label_encoder.items()
 }
 
 with open("mappings.json", "w") as f:
