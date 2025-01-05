@@ -8,10 +8,8 @@ from skl2onnx import convert_sklearn
 from skl2onnx.common.data_types import FloatTensorType
 import json
 
-# Load the dataset
 df = pd.read_csv('watchesData - WorkSheet.csv')
 
-# Data Cleaning and Preprocessing
 df = df[df["Price"] != "Price on request"]
 df["Number of Jewls"] = df["Number of Jewls"].fillna(0)
 df = df.drop(columns=["Title", "Clasp", "Condition", "Diameter", "Rating", "Water Resistance"])
@@ -36,7 +34,6 @@ df["Clasp Material"] = df["Clasp Material"].fillna(mostFrequentClaspMaterial)
 
 df.drop_duplicates(inplace=True)
 
-# Encoding categorical features
 label_encoders = {
     "Model": LabelEncoder(),
     "Case Material": LabelEncoder(),
@@ -48,7 +45,6 @@ label_encoders = {
 for column, encoder in label_encoders.items():
     df[column] = encoder.fit_transform(df[column])
 
-# Save mappings for consistency with JavaScript
 def convert_mapping(mapping):
     """Convert all keys and values in the mapping to standard Python types."""
     return {str(k): int(v) for k, v in mapping.items()}
@@ -61,12 +57,10 @@ mappings = {
 with open("mappings.json", "w") as f:
     json.dump(mappings, f)
 
-# Splitting the dataset
 X = df.drop(columns=["Price"])
 y = df["Price"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# Finding the best number of neighbors for KNN
 best_n = 0
 best_mse = float('inf')
 best_r2 = -float('inf')
@@ -84,19 +78,15 @@ for n in range(1, 21):
         best_n = n
         best_r2 = r2
 
-# Train the final model
 model = KNeighborsRegressor(n_neighbors=best_n)
 model.fit(X_train, y_train)
 
-# Evaluate the final model
 y_pred = model.predict(X_test)
 print(f"Best Mean Squared Error: {mean_squared_error(y_test, y_pred)}")
 print(f"R2 Score: {r2_score(y_test, y_pred)}")
 
-# Convert the model to ONNX format
 initial_type = [("float_input", FloatTensorType([None, X.shape[1]]))]
 onnx_model = convert_sklearn(model, initial_types=initial_type)
 
-# Save the ONNX model
 with open("knn_model.onnx", "wb") as f:
     f.write(onnx_model.SerializeToString())
